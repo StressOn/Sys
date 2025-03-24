@@ -1,258 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Systematic Industried Ltd- Unit 6 ACS  - Control Panel</title>
-
-    <style>
-         <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f3f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Ensures the footer stays at the bottom */
-        }
-        .header {
-            position: fixed; /* Fix the header to the top */
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: #007BFF; /* Your company color */
-            color: white;
-            font-size: 28px;
-            text-align: center;
-            padding: 20px 0;
-            z-index: 1000; /* Make sure it's on top of other elements */
-        }
-        h1 {
-            text-align: center;
-            color: #007BFF;
-            margin-top: 80px; /* Space for fixed header */
-            font-size: 32px;
-        }
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 30px;
-            flex-wrap: wrap;
-            max-width: 1200px;
-            margin: 40px auto;
-            flex-grow: 1; /* Allow the container to grow */
-            padding-bottom: 80px; /* Space for fixed footer */
-        }
-        .device-card {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            width: 250px;
-            text-align: center;
-            color: white;
-            transition: transform 0.3s ease;
-        }
-        .device-card:hover {
-            transform: translateY(-5px);
-        }
-        .device-card h2 {
-            margin-bottom: 20px;
-            font-size: 22px;
-        }
-        .button {
-            background-color: #007BFF;
-            border: none;
-            color: white;
-            padding: 12px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .downtime-button {
-            background-color: #007BFF;
-        }
-        .downtime-button:hover {
-            background-color: #c82333;
-        }
-        .logout-button {
-            background-color: #FFC107;
-            padding: 12px 25px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        .logout-button:hover {
-            background-color: #e0a800;
-        }
-        /* Unique colors for each card */
-        .device-card:nth-child(2) {
-            background-color: #FF6347;
-        }
-        .device-card:nth-child(3) {
-            background-color: #28A745;
-        }
-        .device-card:nth-child(4) {
-            background-color: #17A2B8;
-        }
-        /* Footer styles */
-        footer {
-            position: fixed; /* Fix the footer to the bottom */
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 0;
-            text-align: center;
-            background-color: #333;
-            color: white;
-            z-index: 1000; /* Make sure it's on top of other elements */
-        }
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .device-card {
-                width: 100%;
-                max-width: 350px;
-            }
-        }
-    </style>
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <meta charset="UTF-8">
+  <title>Main Page</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
 
-<div class="header">Systematic Industried Ltd- Unit 6 ACS  - Control Panel</div>
+  <h2>Welcome to Main Page</h2>
 
-<h1>Control Dashboard Panel</h1>
+  <button onclick="logout()">Logout</button>
 
-<div class="container">
-   <button id="logoutButton" class="button logout-button">Logout</button>
+  <h3>Sensor Data:</h3>
+  <p><strong>Count:</strong> <span id="count">N/A</span></p>
+  <p><strong>Timestamp:</strong> <span id="timestamp">N/A</span></p>
 
-    <div class="device-card">
-        <h2>Tubular 1+6</h2>
-        <a href="d1prd.html" class="button">Production</a>
-        <a href="d1downtime.html" class="button downtime-button">Downtime</a>
-        <a href="Staff.html" class="button">Staff</a>
-        <a href="qualitydef.html" class="button">Quality Defective</a>
-        <a href="oee.html" class="button">Equipment Effectiveness</a>
-    </div>
+  <script>
+    // Check session
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        // Not logged in, redirect to login
+        window.location.href = "index.html";
+      } else {
+        // User logged in, fetch data
+        fetchData();
+      }
+    });
 
-    <div class="device-card">
-        <h2>Drawing 1 ( 10 block) </h2>
-        <a href="D2prd.html" class="button">Production</a>
-        <a href="D2 downtime.html" class="button downtime-button">Downtime</a>
-        <a href="D2 Staff.html" class="button">Staff</a>
-        <a href="D2 quality.html" class="button">Quality Defective</a>
-        <a href="D2 OEE.html" class="button">Equipment Effectiveness</a>
-    </div>
-
-    <div class="device-card">
-        <h2>Drawing 2 ( 8 block)</h2>
-        <a href="D3prd.html" class="button">Production</a>
-        <a href="D3 downtime.html" class="button downtime-button">Downtime</a>
-        <a href="D3 Staff.html" class="button">Staff</a>
-        <a href="D3 quality.html" class="button">Quality Defective</a>
-        <a href="D3 OEE.html" class="button">Equipment Effectiveness</a>
-    </div>
-</div>
-
-<footer>
-    &copy; 2025 Systematic Industried Ltd. All Rights Reserved.
-</footer>
-
-<script>
-// Check if the user is logged in
-console.log("Checking login status:", localStorage.getItem("loggedIn")); // Log the login status
-
-if (localStorage.getItem("loggedIn") !== "true") {
-    // Redirect to login page if not logged in
-    window.location.href = "index.html"; // Ensure this path is correct
-}
-
-// Logout functionality
-document.getElementById('logoutButton').addEventListener('click', function() {
-    localStorage.setItem("loggedIn", "false"); // Reset login flag
-    alert('You have been logged out.');
-    window.location.href = "index.html"; // Redirect to login page
-});
-
-// Firebase initialization
-const firebaseConfig = {
-    apiKey: "your-api-key",
-    authDomain: "your-auth-domain",
-    databaseURL: "your-database-url",
-    projectId: "your-project-id",
-    storageBucket: "your-storage-bucket",
-    messagingSenderId: "your-sender-id",
-    appId: "your-app-id"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-
-
-document.addEventListener("contextmenu", function (e) {
-    e.preventDefault(); // Disable right-click menu
-});
-
-document.addEventListener("keydown", function (e) {
-    // Disable common copy shortcuts: Ctrl+C, Ctrl+X, Ctrl+U, and Ctrl+S
-    if (e.ctrlKey && (e.key === "c" || e.key === "x" || e.key === "u" || e.key === "s")) {
-        e.preventDefault();
+    function fetchData() {
+      const sensorRef = database.ref('Sensor/perday');
+      sensorRef.once('value').then((snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById('count').innerText = data.count;
+          document.getElementById('timestamp').innerText = data.timestamp;
+        }
+      });
     }
-});
 
-document.addEventListener("selectstart", function (e) {
-    e.preventDefault(); // Disable text selection
-});
-
-document.addEventListener("keydown", function (e) {
-    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) {
-        e.preventDefault();
+    function logout() {
+      auth.signOut().then(() => {
+        alert("Logged out!");
+        window.location.href = "index.html";
+      });
     }
-    if (e.ctrlKey && e.key === "P") {
-        e.preventDefault();
-    }
-});
-let logoutTimer;
+  </script>
 
-// Function to reset the logout timer
-function resetTimer() {
-    clearTimeout(logoutTimer); // Clear any existing timer
-    logoutTimer = setTimeout(logoutUser, 120000); // Set new timer for 1 min (60000 ms)
-}
-
-// Function to log out the user
-function logoutUser() {
-    localStorage.setItem("loggedIn", "false"); // Reset login flag
-    window.location.href = "index.html"; // Redirect to login page
-}
-
-// Event listeners for user activity
-document.addEventListener("mousemove", resetTimer);
-document.addEventListener("keypress", resetTimer);
-document.addEventListener("touchstart", resetTimer); // For mobile touchscreens
-document.addEventListener("click", resetTimer);
-
-// Start the timer when the page loads
-resetTimer();
-
-</script>
 </body>
 </html>
-
-
-
-
