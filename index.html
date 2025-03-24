@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script> <!-- Import Firebase Config -->
+
+  <!-- Your Firebase config file -->
+  <script src="firebase-config.js"></script>
+
 </head>
 <body>
 
@@ -16,6 +21,7 @@
   <input type="password" id="password" placeholder="Password"><br><br>
   <button onclick="login()">Login</button>
 
+  <!-- Your custom script: Make sure it's AFTER the config -->
   <script>
     function login() {
       const email = document.getElementById("email").value;
@@ -24,7 +30,6 @@
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           alert("Login Successful!");
-          // Redirect to main page
           window.location.href = "main.html";
         })
         .catch((error) => {
@@ -32,7 +37,7 @@
         });
     }
 
-    // Auto-redirect if already logged in
+    // Auto redirect if already logged in
     auth.onAuthStateChanged((user) => {
       if (user) {
         window.location.href = "main.html";
